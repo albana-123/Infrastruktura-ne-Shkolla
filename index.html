@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <link rel="stylesheet" href="css/filter.css">
+<link rel="stylesheet" href="css/nouislider.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>Ndërhyrjet Infrastrukturore në Shkolla </title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="js/tailDT.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/wNumb.js"></script>
+        <script src="data/Bashki_Kufi_Line_1.js"></script>
+        <script src="data/Infrastruktura_ne_Shkolla_2.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ff0019',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ff0019',
+                fillOpacity: 1
+              });
+            }
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        map.createPane('pane_GoogleSatelliteHybrid_0');
+        map.getPane('pane_GoogleSatelliteHybrid_0').style.zIndex = 400;
+        var layer_GoogleSatelliteHybrid_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatelliteHybrid_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+        layer_GoogleSatelliteHybrid_0;
+        map.addLayer(layer_GoogleSatelliteHybrid_0);
+        function pop_Bashki_Kufi_Line_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OBJECTID_1'] !== null ? autolinker.link(feature.properties['OBJECTID_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FID_VKM_36'] !== null ? autolinker.link(feature.properties['FID_VKM_36'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid_1'] !== null ? autolinker.link(feature.properties['fid_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['emërtimi_'] !== null ? autolinker.link(feature.properties['emërtimi_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['inspireid'] !== null ? autolinker.link(feature.properties['inspireid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['kodikombet'] !== null ? autolinker.link(feature.properties['kodikombet'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['nivelinaci'] !== null ? autolinker.link(feature.properties['nivelinaci'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['autorite_1'] !== null ? autolinker.link(feature.properties['autorite_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['shteti'] !== null ? autolinker.link(feature.properties['shteti'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fillimiici'] !== null ? autolinker.link(feature.properties['fillimiici'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['perfundimi'] !== null ? autolinker.link(feature.properties['perfundimi'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['emertimina'] !== null ? autolinker.link(feature.properties['emertimina'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['idalternat'] !== null ? autolinker.link(feature.properties['idalternat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Qarku'] !== null ? autolinker.link(feature.properties['Qarku'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['shape_Leng'] !== null ? autolinker.link(feature.properties['shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape__Len'] !== null ? autolinker.link(feature.properties['Shape__Len'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Bashki_Kufi_Line_1_0() {
+            return {
+                pane: 'pane_Bashki_Kufi_Line_1',
+                opacity: 1,
+                color: 'rgba(255,255,255,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_Bashki_Kufi_Line_1');
+        map.getPane('pane_Bashki_Kufi_Line_1').style.zIndex = 401;
+        map.getPane('pane_Bashki_Kufi_Line_1').style['mix-blend-mode'] = 'normal';
+        var layer_Bashki_Kufi_Line_1 = new L.geoJson(json_Bashki_Kufi_Line_1, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_Bashki_Kufi_Line_1',
+            layerName: 'layer_Bashki_Kufi_Line_1',
+            pane: 'pane_Bashki_Kufi_Line_1',
+            onEachFeature: pop_Bashki_Kufi_Line_1,
+            style: style_Bashki_Kufi_Line_1_0,
+        });
+        bounds_group.addLayer(layer_Bashki_Kufi_Line_1);
+        map.addLayer(layer_Bashki_Kufi_Line_1);
+        function pop_Infrastruktura_ne_Shkolla_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Emri i Shkollës</th>\
+                        <td>' + (feature.properties['Emri_i_shk'] !== null ? autolinker.link(feature.properties['Emri_i_shk'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Bashkia</th>\
+                        <td>' + (feature.properties['Bashkia'] !== null ? autolinker.link(feature.properties['Bashkia'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Njësia ADM</th>\
+                        <td>' + (feature.properties['Njësia_Ad'] !== null ? autolinker.link(feature.properties['Njësia_Ad'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Qyteti/Fshati</th>\
+                        <td>' + (feature.properties['Qyteti_Fsh'] !== null ? autolinker.link(feature.properties['Qyteti_Fsh'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Lokacioni</th>\
+                        <td>' + (feature.properties['Lokacioni'] !== null ? autolinker.link(feature.properties['Lokacioni'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tipi i Shkollës</th>\
+                        <td>' + (feature.properties['Tipi_i_shk'] !== null ? autolinker.link(feature.properties['Tipi_i_shk'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Viti i Ndërtimit</th>\
+                        <td>' + (feature.properties['Viti_i_nd'] !== null ? autolinker.link(feature.properties['Viti_i_nd'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Ndërtesë Historike</th>\
+                        <td>' + (feature.properties['Ndërtesë'] !== null ? autolinker.link(feature.properties['Ndërtesë'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Numri i Kateve</th>\
+                        <td>' + (feature.properties['Numri_i_ka'] !== null ? autolinker.link(feature.properties['Numri_i_ka'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Lartësia në metra e Nërtesës</th>\
+                        <td>' + (feature.properties['Lartësia'] !== null ? autolinker.link(feature.properties['Lartësia'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tipi i çatisë</th>\
+                        <td>' + (feature.properties['Tipi_i_ça'] !== null ? autolinker.link(feature.properties['Tipi_i_ça'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Gjurma e Ndërtesës</th>\
+                        <td>' + (feature.properties['Gjurma_e_n'] !== null ? autolinker.link(feature.properties['Gjurma_e_n'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Distanca Para</th>\
+                        <td>' + (feature.properties['Distanca_p'] !== null ? autolinker.link(feature.properties['Distanca_p'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Distanca Mbrapa</th>\
+                        <td>' + (feature.properties['Distanca_m'] !== null ? autolinker.link(feature.properties['Distanca_m'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Distanca ana 1</th>\
+                        <td>' + (feature.properties['Distanca_a'] !== null ? autolinker.link(feature.properties['Distanca_a'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Distanca ana 2</th>\
+                        <td>' + (feature.properties['Distanca_1'] !== null ? autolinker.link(feature.properties['Distanca_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sipërfaqia e Ndërtesës</th>\
+                        <td>' + (feature.properties['Sipërfaqj'] !== null ? autolinker.link(feature.properties['Sipërfaqj'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sipërfaqe Prone m2</th>\
+                        <td>' + (feature.properties['Sipërfaqe'] !== null ? autolinker.link(feature.properties['Sipërfaqe'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Djem</th>\
+                        <td>' + (feature.properties['Djem'] !== null ? autolinker.link(feature.properties['Djem'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Vajza</th>\
+                        <td>' + (feature.properties['Vajza'] !== null ? autolinker.link(feature.properties['Vajza'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Numri i Nxënësve</th>\
+                        <td>' + (feature.properties['Numri_i_nx'] !== null ? autolinker.link(feature.properties['Numri_i_nx'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Kapaciteti i Shkollës</th>\
+                        <td>' + (feature.properties['Kapaciteti'] !== null ? autolinker.link(feature.properties['Kapaciteti'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nr. i Mësuesve</th>\
+                        <td>' + (feature.properties['Nr__i_mës'] !== null ? autolinker.link(feature.properties['Nr__i_mës'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Mësues Gjinia M</th>\
+                        <td>' + (feature.properties['Mësues_Me'] !== null ? autolinker.link(feature.properties['Mësues_Me'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Mësues Gjinia F</th>\
+                        <td>' + (feature.properties['Mësues_Fe'] !== null ? autolinker.link(feature.properties['Mësues_Fe'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shkolla Qendër Komunitare</th>\
+                        <td>' + (feature.properties['Shkolla_Qe'] !== null ? autolinker.link(feature.properties['Shkolla_Qe'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nr. i Klasave</th>\
+                        <td>' + (feature.properties['Nr__i_klas'] !== null ? autolinker.link(feature.properties['Nr__i_klas'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nr. i Laboratoreve</th>\
+                        <td>' + (feature.properties['Nr__i_Labo'] !== null ? autolinker.link(feature.properties['Nr__i_Labo'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Dhomë Mjekësore</th>\
+                        <td>' + (feature.properties['Dhomë_mje'] !== null ? autolinker.link(feature.properties['Dhomë_mje'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Zonë Sportive</th>\
+                        <td>' + (feature.properties['Zonë_spor'] !== null ? autolinker.link(feature.properties['Zonë_spor'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Topografia Terrenit</th>\
+                        <td>' + (feature.properties['Topografia'] !== null ? autolinker.link(feature.properties['Topografia'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Zonë me Rrezik Përmbytje</th>\
+                        <td>' + (feature.properties['Zonë_me_r'] !== null ? autolinker.link(feature.properties['Zonë_me_r'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Aksesibiliteti në Shkollë</th>\
+                        <td>' + (feature.properties['Aksesibili'] !== null ? autolinker.link(feature.properties['Aksesibili'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Aksesibiliteti në Shkollë për PAK</th>\
+                        <td>' + (feature.properties['Aksesibi_1'] !== null ? autolinker.link(feature.properties['Aksesibi_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Akses Interneti</th>\
+                        <td>' + (feature.properties['Akses_Inte'] !== null ? autolinker.link(feature.properties['Akses_Inte'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Furnizimi me Ujë</th>\
+                        <td>' + (feature.properties['Tipi_i_fur'] !== null ? autolinker.link(feature.properties['Tipi_i_fur'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Panele Fotovoltaike</th>\
+                        <td>' + (feature.properties['Panele_fot'] !== null ? autolinker.link(feature.properties['Panele_fot'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Klasifikimi sipas Eficenses së Energjisë</th>\
+                        <td>' + (feature.properties['Klasifikim'] !== null ? autolinker.link(feature.properties['Klasifikim'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Rankimi sipas prioritetit</th>\
+                        <td>' + (feature.properties['Rankimi_si'] !== null ? autolinker.link(feature.properties['Rankimi_si'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tipi i Ndërhyrjes</th>\
+                        <td>' + (feature.properties['Tipi_i_nd'] !== null ? autolinker.link(feature.properties['Tipi_i_nd'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Infrastruktura_ne_Shkolla_2_0(feature) {
+            switch(String(feature.properties['Tipi_i_nd'])) {
+                case 'Rikonstruksion Tipi A':
+                    return {
+                pane: 'pane_Infrastruktura_ne_Shkolla_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(52,252,42,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Rikonstruksion Tipi B':
+                    return {
+                pane: 'pane_Infrastruktura_ne_Shkolla_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(26,78,252,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Rehabilitim':
+                    return {
+                pane: 'pane_Infrastruktura_ne_Shkolla_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(214,180,42,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Rindërtim Total':
+                    return {
+                pane: 'pane_Infrastruktura_ne_Shkolla_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(231,0,27,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Infrastruktura_ne_Shkolla_2');
+        map.getPane('pane_Infrastruktura_ne_Shkolla_2').style.zIndex = 402;
+        map.getPane('pane_Infrastruktura_ne_Shkolla_2').style['mix-blend-mode'] = 'normal';
+        var layer_Infrastruktura_ne_Shkolla_2 = new L.geoJson(json_Infrastruktura_ne_Shkolla_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Infrastruktura_ne_Shkolla_2',
+            layerName: 'layer_Infrastruktura_ne_Shkolla_2',
+            pane: 'pane_Infrastruktura_ne_Shkolla_2',
+            onEachFeature: pop_Infrastruktura_ne_Shkolla_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_Infrastruktura_ne_Shkolla_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Infrastruktura_ne_Shkolla_2);
+        map.addLayer(layer_Infrastruktura_ne_Shkolla_2);
+            var title = new L.Control();
+            title.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+            title.update = function () {
+                this._div.innerHTML = '<h2>Ndërhyrjet Infrastrukturore në Shkolla </h2>';
+            };
+            title.addTo(map);
+            var abstract = new L.Control({'position':'bottomleft'});
+            abstract.onAdd = function (map) {
+                this._div = L.DomUtil.create('div',
+                'leaflet-control abstract');
+                this._div.id = 'abstract'
+                    this._div.setAttribute("onmouseenter", "abstract.show()");
+                    this._div.setAttribute("onmouseleave", "abstract.hide()");
+                    this.hide();
+                    return this._div;
+                };
+                abstract.hide = function () {
+                    this._div.classList.remove("abstractUncollapsed");
+                    this._div.classList.add("abstract");
+                    this._div.innerHTML = 'i'
+                }
+                abstract.show = function () {
+                    this._div.classList.remove("abstract");
+                    this._div.classList.add("abstractUncollapsed");
+                    this._div.innerHTML = 'Projekti për Transparencë dhe Barazi në Ndërhyrjet Infrastrukturore në Shkolla mbështetur nga USAID dhe  implementuar nga UNICEF​ në bashkëpunim me​ Ministrinë e Arsimit dhe Sporteve dhe Bashkitë Dibër, Lezhë, Elbasan, Roskovec, Korçë dhe Gjirokastër ';
+            };
+            abstract.addTo(map);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'Infrastruktura_ne_Shkolla<br /><table><tr><td style="text-align: center;"><img src="legend/Infrastruktura_ne_Shkolla_2_RikonstruksionTipiA0.png" /></td><td>Rikonstruksion Tipi A</td></tr><tr><td style="text-align: center;"><img src="legend/Infrastruktura_ne_Shkolla_2_RikonstruksionTipiB1.png" /></td><td>Rikonstruksion Tipi B</td></tr><tr><td style="text-align: center;"><img src="legend/Infrastruktura_ne_Shkolla_2_Rehabilitim2.png" /></td><td>Rehabilitim</td></tr><tr><td style="text-align: center;"><img src="legend/Infrastruktura_ne_Shkolla_2_RindërtimTotal3.png" /></td><td>Rindërtim Total</td></tr></table>': layer_Infrastruktura_ne_Shkolla_2,'<img src="legend/Bashki_Kufi_Line_1.png" /> Bashki_Kufi_Line': layer_Bashki_Kufi_Line_1,"Google Satellite Hybrid": layer_GoogleSatelliteHybrid_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        map.addControl(new L.Control.Search({
+            layer: layer_Infrastruktura_ne_Shkolla_2,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'Emri_i_shk'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        var mapDiv = document.getElementById('map');
+        var row = document.createElement('div');
+        row.className="row";
+        row.id="all";
+        row.style.height = "100%";
+        var col1 = document.createElement('div');
+        col1.className="col9";
+        col1.id = "mapWindow";
+        col1.style.height = "99%";
+        col1.style.width = "80%";
+        col1.style.display = "inline-block";
+        var col2 = document.createElement('div');
+        col2.className="col3";
+        col2.id = "menu";
+        col2.style.display = "inline-block";
+        mapDiv.parentNode.insertBefore(row, mapDiv);
+        document.getElementById("all").appendChild(col1);
+        document.getElementById("all").appendChild(col2);
+        col1.appendChild(mapDiv)
+        var Filters = {"Bashkia": "str","Tipi_i_nd": "str","Lokacioni": "str"};
+        function filterFunc() {
+          map.eachLayer(function(lyr){
+          if ("options" in lyr && "dataVar" in lyr["options"]){
+            features = this[lyr["options"]["dataVar"]].features.slice(0);
+            try{
+              for (key in Filters){
+                keyS = key.replace(/[^a-zA-Z0-9_]/g, "")
+                if (Filters[key] == "str" || Filters[key] == "bool"){
+                  var selection = [];
+                  var options = document.getElementById("sel_" + keyS).options
+                  for (var i=0; i < options.length; i++) {
+                    if (options[i].selected) selection.push(options[i].value);
+                  }
+                    try{
+                      if (key in features[0].properties){
+                        for (i = features.length - 1;
+                          i >= 0; --i){
+                          if (selection.indexOf(
+                          features[i].properties[key])<0
+                          && selection.length>0) {
+                          features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                  }
+                }
+                if (Filters[key] == "int"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (parseInt(features[i].properties[key])
+                          < sliderVals[0]
+                          || parseInt(features[i].properties[key])
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "real"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (features[i].properties[key]
+                          < sliderVals[0]
+                          || features[i].properties[key]
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "date"
+                  || Filters[key] == "datetime"
+                  || Filters[key] == "time"){
+                  try{
+                    if (key in features[0].properties){
+                      HTMLkey = key.replace(/[&\/\\#,+()$~%.'":*?<>{} ]/g, '');
+                      startdate = document.getElementById("dat_" +
+                        HTMLkey + "_date1").value.replace(" ", "T");
+                      enddate = document.getElementById("dat_" +
+                        HTMLkey + "_date2").value.replace(" ", "T");
+                      for (i = features.length - 1; i >= 0; --i){
+                        if (features[i].properties[key] < startdate
+                          || features[i].properties[key] > enddate){
+                          features.splice(i,1);
+                        }
+                      }
+                    }
+                  } catch(err){
+                  }
+                }
+              }
+            } catch(err){
+            }
+          this[lyr["options"]["layerName"]].clearLayers();
+          this[lyr["options"]["layerName"]].addData(features);
+          }
+          })
+        }
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Bashkia = document.createElement('div');
+            div_Bashkia.id = "div_Bashkia";
+            div_Bashkia.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Bashkia);
+            sel_Bashkia = document.createElement('select');
+            sel_Bashkia.multiple = true;
+            sel_Bashkia.size = 6;
+            sel_Bashkia.id = "sel_Bashkia";
+            var Bashkia_options_str = "<option value='' unselected></option>";
+            sel_Bashkia.onchange = function(){filterFunc()};
+            Bashkia_options_str  += '<option value="Dibër">Dibër</option>';
+            Bashkia_options_str  += '<option value="Elbasan">Elbasan</option>';
+            Bashkia_options_str  += '<option value="Gjirokastër">Gjirokastër</option>';
+            Bashkia_options_str  += '<option value="Korçë">Korçë</option>';
+            Bashkia_options_str  += '<option value="Lezhë">Lezhë</option>';
+            Bashkia_options_str  += '<option value="Roskovec">Roskovec</option>';
+            sel_Bashkia.innerHTML = Bashkia_options_str;
+            div_Bashkia.appendChild(sel_Bashkia);
+            var lab_Bashkia = document.createElement('div');
+            lab_Bashkia.innerHTML = 'Bashkia';
+            lab_Bashkia.className = 'filterlabel';
+            div_Bashkia.appendChild(lab_Bashkia);
+            var reset_Bashkia = document.createElement('div');
+            reset_Bashkia.innerHTML = 'clear filter';
+            reset_Bashkia.className = 'filterlabel';
+            reset_Bashkia.onclick = function() {
+                var options = document.getElementById("sel_Bashkia").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Bashkia.appendChild(reset_Bashkia);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Tipi_i_nd = document.createElement('div');
+            div_Tipi_i_nd.id = "div_Tipi_i_nd";
+            div_Tipi_i_nd.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Tipi_i_nd);
+            sel_Tipi_i_nd = document.createElement('select');
+            sel_Tipi_i_nd.multiple = true;
+            sel_Tipi_i_nd.size = 4;
+            sel_Tipi_i_nd.id = "sel_Tipi_i_nd";
+            var Tipi_i_nd_options_str = "<option value='' unselected></option>";
+            sel_Tipi_i_nd.onchange = function(){filterFunc()};
+            Tipi_i_nd_options_str  += '<option value="Rehabilitim">Rehabilitim</option>';
+            Tipi_i_nd_options_str  += '<option value="Rikonstruksion Tipi A">Rikonstruksion Tipi A</option>';
+            Tipi_i_nd_options_str  += '<option value="Rikonstruksion Tipi B">Rikonstruksion Tipi B</option>';
+            Tipi_i_nd_options_str  += '<option value="Rindërtim Total">Rindërtim Total</option>';
+            sel_Tipi_i_nd.innerHTML = Tipi_i_nd_options_str;
+            div_Tipi_i_nd.appendChild(sel_Tipi_i_nd);
+            var lab_Tipi_i_nd = document.createElement('div');
+            lab_Tipi_i_nd.innerHTML = 'Tipi_i_nd';
+            lab_Tipi_i_nd.className = 'filterlabel';
+            div_Tipi_i_nd.appendChild(lab_Tipi_i_nd);
+            var reset_Tipi_i_nd = document.createElement('div');
+            reset_Tipi_i_nd.innerHTML = 'clear filter';
+            reset_Tipi_i_nd.className = 'filterlabel';
+            reset_Tipi_i_nd.onclick = function() {
+                var options = document.getElementById("sel_Tipi_i_nd").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Tipi_i_nd.appendChild(reset_Tipi_i_nd);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Lokacioni = document.createElement('div');
+            div_Lokacioni.id = "div_Lokacioni";
+            div_Lokacioni.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Lokacioni);
+            sel_Lokacioni = document.createElement('select');
+            sel_Lokacioni.multiple = true;
+            sel_Lokacioni.size = 2;
+            sel_Lokacioni.id = "sel_Lokacioni";
+            var Lokacioni_options_str = "<option value='' unselected></option>";
+            sel_Lokacioni.onchange = function(){filterFunc()};
+            Lokacioni_options_str  += '<option value="Rural">Rural</option>';
+            Lokacioni_options_str  += '<option value="Urban">Urban</option>';
+            sel_Lokacioni.innerHTML = Lokacioni_options_str;
+            div_Lokacioni.appendChild(sel_Lokacioni);
+            var lab_Lokacioni = document.createElement('div');
+            lab_Lokacioni.innerHTML = 'Lokacioni';
+            lab_Lokacioni.className = 'filterlabel';
+            div_Lokacioni.appendChild(lab_Lokacioni);
+            var reset_Lokacioni = document.createElement('div');
+            reset_Lokacioni.innerHTML = 'clear filter';
+            reset_Lokacioni.className = 'filterlabel';
+            reset_Lokacioni.onclick = function() {
+                var options = document.getElementById("sel_Lokacioni").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Lokacioni.appendChild(reset_Lokacioni);
+        </script>
+    </body>
+</html>
